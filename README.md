@@ -38,193 +38,95 @@ https://mental-health-analyser-ai.streamlit.app/
 
 # 🌱 The Idea
 
-TalkSpace is designed to be a **calm digital environment for conversation**.
+TalkSpace is designed as a calm digital environment for conversation.
 
-Many AI chat systems focus on answering questions quickly.
-TalkSpace focuses on something different:
+Unlike traditional chatbots focused on quick answers, TalkSpace focuses on:
+- helping users feel heard
+- maintaining natural, human-like dialogue
+- offering gentle, supportive responses
 
-> Helping people feel heard.
-
-The system tries to behave more like a **supportive listener** than a typical chatbot.
-
-It reflects emotions, asks gentle questions, and offers calming suggestions.
-
+The goal is not just interaction — but emotional understanding.
 ---
 
-# ✨ Features
+## ✨ Core Features
 
-### 🌿 AI Companion – Nira
+🌿 **AI Companion – Nira**
+- Conversational agent designed for warmth and empathy
+- Supports dual modes: Supportive Friend / Counselor
 
-A conversation companion designed to respond with warmth and understanding.
+🧠 **Emotion-Aware Responses**
+- Detects emotional signals (loneliness, stress, anxiety, etc.)
+- Adapts tone and response strategy dynamically
 
-Users can switch between:
+💬 **Conversation Memory**
+- Maintains short-term context across turns
+- References previous emotional themes naturally
 
-• **Supportive Friend Mode**
-• **Counselor Mode**
+📊 **Mood Journey Tracking**
+- Visualizes emotional trends across the conversation
+
+🌬 **Calm Tools**
+- Guided breathing
+- Grounding suggestions
+- Reflection prompts
+
+🌱 **Gentle Reminders**
+- Soft affirmations to maintain a supportive environment
 
 ---
 ## 🧠 System Architecture
+TalkSpace follows a hybrid architecture combining machine learning classification with rule-based conversational logic.
 
-TalkSpace uses a hybrid approach combining **machine learning classification** with **rule-based conversation design**.
+The system processes user input through multiple stages to generate context-aware, emotionally aligned responses.
 
 ### Pipeline
 
-User Input → Text Vectorization → ML Prediction → Emotion Detection → Response Generation → Conversation Memory Update
+User Input → Text Vectorization → ML Prediction → Emotion Detection → Response Generation → Memory Update
 
-### Core Components
+### 🧩 Component Overview
 
-**1. Text Vectorization**
+| Component                  | Description |
+|---------------------------|------------|
+| Text Vectorization        | Converts user input into TF-IDF numerical features |
+| ML Classifier             | Predicts emotional intensity (probability score) |
+| Emotion Detection Layer   | Identifies emotional themes using keyword signals |
+| Response Strategy Engine  | Generates responses using validation, support, and suggestions |
+| Conversation Memory       | Maintains short-term context for multi-turn conversations |
+| UI Layer (Streamlit)      | Provides chat interface and emotional visualization |
 
-User messages are converted into numerical representations using a trained vectorizer.
-
-* TF-IDF vectorization
-* Sparse text feature representation
-
----
-
-**2. Depression Signal Classifier**
-
-A trained machine learning model estimates emotional intensity from the input text.
-
-Model output:
-
-* probability score of emotional distress
-* used to guide response strategy
-
----
-
-**3. Emotion Detection Layer**
-
-A lightweight keyword-based signal detection identifies emotional themes:
-
-* loneliness
-* sadness
-* anxiety
-* stress
-* social conflict
-* self-worth issues
-
-These signals help shape the tone of the response.
-
----
-
-**4. Response Strategy Engine**
-
-The response generator combines:
-
-* validation phrases
-* supportive messages
-* reflective questions
-* grounding suggestions
-
-The system selects responses dynamically based on:
-
-* predicted emotional intensity
-* detected emotion category
-* selected conversation style
-
----
-
-**5. Conversation Memory**
-
-The system maintains short-term conversation context:
-
-* remembers previous emotional themes
-* references earlier discussion topics
-* adapts follow-up prompts accordingly
-
-This creates more **natural multi-turn conversations**.
-
----
-
-**6. UI Layer**
-
-The interface is built with Streamlit and includes:
-
-* chat interface
-* mood trend visualization
-* emotional signal display
-* calming tools
-
-The UI is designed to feel **minimal, calm, and conversational**.
-
----
-
-## 📊 Model Training
-
-The machine learning model was trained on a cleaned dataset of Reddit mental-health related posts.
-
-Training process included:
-
-* text cleaning
-* TF-IDF vectorization
-* supervised classification
-* probability prediction using Scikit-learn
-
-The trained model and vectorizer are stored using **Joblib** for fast loading in the application.
+Each component works together to ensure responses are:
+- emotionally aware
+- context-aware
+- conversationally natural
 
 ---
 
 
-### 🧠 Emotion-Aware Conversation
+## 🎨 UI Layer
 
-TalkSpace detects emotional signals from text including:
+Built with Streamlit, the interface is designed to feel:
+- minimal
+- calm
+- conversational
 
-* loneliness
-* sadness
-* anxiety
-* stress
-* social pressure
-* self-worth concerns
-
-Responses adapt based on these signals.
-
----
-
-### 💬 Conversation Memory
-
-The system remembers earlier conversation themes and references them naturally.
-
-Example:
-
-> “Earlier you mentioned something related to loneliness. That can be really hard to deal with.”
-
----
-
-### 📈 Mood Journey
-
-The sidebar tracks emotional signals across the conversation and shows a **mood trend graph**.
-
-This helps visualize how the tone of the conversation evolves.
-
----
-
-### 🫁 Calm Tools
-
-TalkSpace includes simple grounding tools such as:
-
-• Guided breathing exercises
-• calming suggestions
-• emotional reflection prompts
-
----
-
-### 🌱 Gentle Reminders
-
-Small affirmations appear in the sidebar to create a **supportive and calm environment**.
-
-
+Includes:
+- chat interface
+- mood visualization
+- emotional signal tracking
+- calming interaction tools
 
 
 ---
 
-# ⚙️ Tech Stack
+## ⚙️ Tech Stack
 
-* Python
-* Streamlit
-* Scikit-learn
-* Pandas
-* Joblib
+| Category        | Tools |
+|----------------|------|
+| Language       | Python |
+| Framework      | Streamlit |
+| ML Library     | Scikit-learn |
+| Data Handling  | Pandas |
+| Model Storage  | Joblib |
 
 A trained machine learning model estimates emotional intensity and guides conversation responses.
 
