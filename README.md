@@ -1,4 +1,6 @@
-![TalkSpace Banner](screenshots/talkspace-ai-banner.png)
+<p align="center">
+  <img src="screenshots/talkspace-ai-banner.png" width="100%" />
+</p>
 
 
 
