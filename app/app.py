@@ -152,6 +152,53 @@ def detect_emotion(text):
 
     return "general"
 
+
+def generate_ai_response(user_input, emotion, mode):
+
+    # Create memory if not exists
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    st.session_state.chat_history.append(user_input)
+
+    recent_memory = " ".join(st.session_state.chat_history[-3:])
+    topic_memory = ", ".join(st.session_state.topic_memory[-3:])
+
+    system_prompt = f"""
+You are Nira, a warm, emotionally supportive AI companion.
+
+Your purpose:
+- Help users feel heard and less alone
+- Be calm, gentle, and human-like
+- Never sound robotic or scripted
+
+Rules:
+- Always validate feelings first
+- Do NOT jump into advice immediately
+- Keep responses conversational
+- Avoid repeating phrases
+- Ask soft follow-up questions
+
+Conversation style: {mode}
+Recent thoughts: {recent_memory}
+Detected emotion: {emotion}
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_input}
+            ],
+            temperature=0.7
+        )
+
+        return response.choices[0].message.content
+
+    except Exception as e:
+        return "I'm here with you… something went wrong on my side, but you can keep talking 💙"
+
 # -----------------------------
 # COPING SUGGESTIONS
 # -----------------------------
@@ -325,6 +372,8 @@ if st.session_state.emotion_history:
 
 else:
     st.sidebar.write("No signals yet")
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
 # -----------------------------
 # MOOD JOURNEY
@@ -474,7 +523,7 @@ Talking to a real person right now could really help.
         st.session_state.topic_memory.append(emotion)
         st.session_state.emotion_history.append(emotion)
 
-        response = generate_response(prob, emotion, mode)
+        response = generate_ai_response(user_input, emotion, mode)
 
     # THINKING ANIMATION
 
