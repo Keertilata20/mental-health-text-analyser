@@ -140,41 +140,72 @@ def detect_emotion(text):
                 return emotion
     return "general"
 
+def detect_stage(text):
+    text = text.lower()
+
+    if any(x in text for x in ["i dont need", "leave me", "stop", "no thanks"]):
+        return "resistant"
+
+    elif any(x in text for x in ["what should i do", "help me", "any advice"]):
+        return "seeking_help"
+
+    else:
+        return "venting"
+
 # -----------------------------
 # AI RESPONSE
 # -----------------------------
 
-def generate_ai_response(user_input, emotion, mode):
+def generate_ai_response(user_input, emotion, mode, stage):
 
     st.session_state.chat_history.append(user_input)
     recent_memory = " ".join(st.session_state.chat_history[-3:])
 
     system_prompt = f"""
-You are Nira, a deeply empathetic and emotionally intelligent companion.
+You are Nira, a deeply empathetic human-like companion.
 
-Your purpose is to make the user feel truly understood and less alone.
+Your ONLY goal is to make the user feel understood.
 
-IMPORTANT RULES:
-- Do NOT use generic phrases like "your feelings make sense", "I'm here with you", or "would you like to tell me more"
-- Do NOT ask the same type of question repeatedly
-- Do NOT follow a fixed pattern
-- Do NOT jump into advice unless user asks
-- Avoid repeating sentence structures
-- Only give suggestions if explicitly asked
+STRICT RULES (never break these):
+- NEVER give suggestions unless user explicitly asks for help
+- NEVER use phrases like:
+  "I'm here with you"
+  "Your feelings make sense"
+  "I'm glad you shared that"
+- NEVER ask generic questions repeatedly
+- NEVER respond positively to negative expressions (e.g., if user says "I hate you", do NOT thank them)
 
-HOW TO RESPOND:
-- Reflect the user's feelings in a specific way
-- Use their words (like invisible, alone, etc.)
-- Sometimes do NOT ask a question
-- Sound human, not robotic
+BEHAVIOR:
+- Respond like a real person in a conversation, not a therapist
+- Reflect the exact feeling behind the words
+- Use the user’s language (e.g., "alone", "ignored", "invisible")
+- Sometimes just respond without asking anything
+- Keep responses natural and varied
 
-TONE:
-- Warm, calm, personal
-- Not too long
+IMPORTANT:
+If user rejects help (e.g., "I don't need suggestions"):
+→ Respect it and STOP giving suggestions
+
+If user shows anger:
+→ Acknowledge it, don’t soften it unnaturally
+
+Tone:
+- Calm, real, grounded
+- Not repetitive
+- Not overly structured
 
 Conversation style: {mode}
 Emotion: {emotion}
 Recent thoughts: {recent_memory}
+User stage: {stage}
+
+Behavior rules:
+- If stage is "venting": DO NOT give advice or solutions
+- If stage is "resistant": DO NOT suggest anything, DO NOT push conversation
+- If stage is "seeking_help": you may gently suggest
+
+Match your tone to the stage.
+
 """
 
     try:
@@ -227,6 +258,7 @@ if user_input:
     st.session_state.messages.append({"role":"user","content":user_input})
 
     text = user_input.lower().strip()
+    stage = detect_stage(user_input)
 
     # CRISIS
     if any(word in text for word in crisis_words):
@@ -248,7 +280,7 @@ You can stay here and talk to me. I'm listening.
         st.session_state.topic_memory.append(emotion)
         st.session_state.emotion_history.append(emotion)
 
-        response = generate_ai_response(user_input, emotion, mode)
+        response = generate_ai_response(user_input, emotion, mode, stage)
 
     # typing effect
     with st.chat_message("assistant"):
