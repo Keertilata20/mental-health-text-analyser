@@ -9,6 +9,7 @@ import os
 import re
 from supabase import create_client, Client
 import uuid
+from streamlit_js_eval import streamlit_js_eval
 
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
 SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
@@ -21,15 +22,22 @@ load_dotenv()
 # -----------------------------
 # USER IDENTIFICATION
 # -----------------------------
+# get local storage user_id
+stored_user = streamlit_js_eval(js_expressions="localStorage.getItem('user_id')", key="get_user")
 if "user_id" not in st.session_state:
-    query_params = st.query_params
 
-    if "user_id" in query_params:
-        st.session_state.user_id = query_params["user_id"]
+    if stored_user:
+        st.session_state.user_id = stored_user
+
     else:
         new_id = str(uuid.uuid4())
         st.session_state.user_id = new_id
-        st.query_params["user_id"] = new_id
+
+        # store in browser
+        streamlit_js_eval(
+            js_expressions=f"localStorage.setItem('user_id', '{new_id}')",
+            key="set_user"
+        )
 
 # -----------------------------
 # PAGE CONFIG
