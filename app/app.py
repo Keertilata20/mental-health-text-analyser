@@ -24,24 +24,8 @@ st.set_page_config(
 # -----------------------------
 # USER IDENTIFICATION (FIXED ORDER)
 # -----------------------------
-stored_user = streamlit_js_eval(
-    js_expressions="localStorage.getItem('user_id')",
-    key="get_user"
-)
-
 if "user_id" not in st.session_state:
-
-    if stored_user:
-        st.session_state.user_id = stored_user[0]
-
-    else:
-        new_id = str(uuid.uuid4())
-        st.session_state.user_id = new_id
-
-        streamlit_js_eval(
-            js_expressions=f"localStorage.setItem('user_id', '{new_id}')",
-            key="set_user"
-        )
+    st.session_state.user_id = "default_user"
 
 # -----------------------------
 # CONVERSATION INITIALIZATION (FIX)
