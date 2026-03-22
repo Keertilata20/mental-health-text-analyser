@@ -34,18 +34,31 @@ if "user_id" not in st.session_state:
 # -----------------------------
 # CONVERSATION INITIALIZATION (FIX)
 # -----------------------------
+stored_conv = streamlit_js_eval(
+    js_expressions="localStorage.getItem('last_conversation_id')",
+    key="get_conv"
+)
+
 if "conversation_id" not in st.session_state:
 
-    # check if coming from URL
     query_params = st.query_params
 
-    if "conversation_id" in query_params:
+    if "conversation_id" in query_params and query_params["conversation_id"]:
         st.session_state.conversation_id = query_params["conversation_id"]
+
+    elif stored_conv:
+        st.session_state.conversation_id = stored_conv[0]   # ✅ FIXED
 
     else:
         new_conv = str(uuid.uuid4())
         st.session_state.conversation_id = new_conv
         st.query_params["conversation_id"] = new_conv
+
+    # ✅ SAVE AFTER SETTING
+    streamlit_js_eval(
+        js_expressions=f"localStorage.setItem('last_conversation_id', '{st.session_state.conversation_id}')",
+        key="set_conv"
+    )
 
 #--------------------------------
 # supabase setup
@@ -294,7 +307,7 @@ def get_conversations():
 # SESSION STATE
 # -----------------------------
 
-if "messages" not in st.session_state or len(st.session_state.messages) == 0:
+if "messages" not in st.session_state:
     response = supabase.table("messages") \
         .select("*") \
         .eq("user_id", st.session_state.user_id) \
@@ -660,11 +673,6 @@ If intensity is low:
         return None
     return res_json['choices'][0]['message']['content']
 
-
-
-
-
-
 # -----------------------------
 # EMOTIONAL WEATHER
 # -----------------------------
@@ -1025,5 +1033,5 @@ if user_input:
     "user_id": st.session_state.user_id,
     "conversation_id": st.session_state.conversation_id,
     "role": "assistant",
-   "content": clean_input
+   "content": response
 }).execute()
